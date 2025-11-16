@@ -5,8 +5,11 @@ import {
   Package, 
   ArrowLeftRight, 
   Warehouse, 
-  BarChart3 
+  BarChart3,
+  LogOut
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "./ui/button";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -22,6 +25,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const { signOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,6 +62,18 @@ export default function Layout({ children }: LayoutProps) {
               );
             })}
           </nav>
+
+          {/* Logout button */}
+          <div className="p-4 border-t border-border">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-muted-foreground hover:text-accent-foreground hover:bg-accent"
+              onClick={signOut}
+            >
+              <LogOut className="h-5 w-5 mr-3" />
+              Sair
+            </Button>
+          </div>
         </div>
       </aside>
 
