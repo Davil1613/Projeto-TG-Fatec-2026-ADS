@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "./ui/button";
+import TrialBanner from "./TrialBanner";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -79,7 +80,8 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main content */}
       <main className="pl-64">
-        <div className="container mx-auto p-8">
+        <div className="container mx-auto p-8 space-y-6">
+          <TrialBanner />
           {children}
         </div>
       </main>
