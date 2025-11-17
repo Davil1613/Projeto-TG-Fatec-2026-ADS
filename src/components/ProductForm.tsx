@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useTenant } from "@/hooks/useTenant";
 
 interface Category {
   id: string;
@@ -38,6 +39,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { tenantId } = useTenant();
 
   useEffect(() => {
     loadCategories();
@@ -63,6 +65,16 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!tenantId) {
+      toast({
+        title: "Erro",
+        description: "Tenant não encontrado",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -86,7 +98,9 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         if (error) throw error;
         toast({ title: "Produto atualizado com sucesso!" });
       } else {
-        const { error } = await supabase.from("products").insert(productData);
+        const { error } = await supabase
+          .from("products")
+          .insert({ ...productData, tenant_id: tenantId });
         if (error) throw error;
         toast({ title: "Produto cadastrado com sucesso!" });
       }

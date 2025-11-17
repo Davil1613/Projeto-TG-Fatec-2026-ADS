@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
+import { useTenant } from "@/hooks/useTenant";
 
 interface Product {
   id: string;
@@ -35,6 +36,7 @@ export default function MovementForm({ onSuccess }: MovementFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { tenantId } = useTenant();
 
   useEffect(() => {
     loadProducts();
@@ -52,6 +54,16 @@ export default function MovementForm({ onSuccess }: MovementFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!tenantId) {
+      toast({
+        title: "Erro",
+        description: "Tenant não encontrado",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -75,6 +87,7 @@ export default function MovementForm({ onSuccess }: MovementFormProps) {
         movement_type: formData.movement_type,
         quantity,
         notes: formData.notes || null,
+        tenant_id: tenantId,
       });
 
       if (error) throw error;

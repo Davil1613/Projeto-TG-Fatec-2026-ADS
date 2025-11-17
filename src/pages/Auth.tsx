@@ -11,6 +11,7 @@ import { Package } from "lucide-react";
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
 
@@ -28,7 +29,7 @@ export default function Auth() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, companyName);
     if (error) {
       toast({
         title: "Erro ao criar conta",
@@ -38,7 +39,7 @@ export default function Auth() {
     } else {
       toast({
         title: "Conta criada com sucesso!",
-        description: "Você já pode fazer login.",
+        description: "Você já pode fazer login. Trial de 7 dias ativado!",
       });
     }
   };
@@ -93,6 +94,16 @@ export default function Auth() {
             </TabsContent>
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-company">Nome da Empresa</Label>
+                  <Input
+                    id="signup-company"
+                    type="text"
+                    placeholder="Minha Empresa"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
