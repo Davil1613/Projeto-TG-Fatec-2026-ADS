@@ -6,8 +6,7 @@ interface Tenant {
   id: string;
   name: string;
   plan: "free" | "premium";
-  status: "active" | "inactive" | "trial";
-  trial_ends_at: string | null;
+  status: "active" | "inactive";
   subscribed_at: string | null;
 }
 
@@ -60,32 +59,15 @@ export function useTenant() {
     }
   };
 
-  const isTrialActive = () => {
-    if (!tenant || tenant.status !== "trial" || !tenant.trial_ends_at) {
-      return false;
-    }
-    return new Date(tenant.trial_ends_at) > new Date();
-  };
-
   const isPremium = () => {
     return tenant?.plan === "premium" && tenant?.status === "active";
-  };
-
-  const daysLeftInTrial = () => {
-    if (!tenant || !tenant.trial_ends_at) return 0;
-    const now = new Date();
-    const end = new Date(tenant.trial_ends_at);
-    const diff = end.getTime() - now.getTime();
-    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   };
 
   return {
     tenant,
     tenantId,
     loading,
-    isTrialActive: isTrialActive(),
     isPremium: isPremium(),
-    daysLeftInTrial: daysLeftInTrial(),
     refetch: loadTenant,
   };
 }
