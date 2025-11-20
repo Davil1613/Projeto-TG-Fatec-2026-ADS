@@ -42,7 +42,9 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
   const { tenantId } = useTenant();
 
   useEffect(() => {
-    loadCategories();
+    if (tenantId) {
+      loadCategories();
+    }
     if (product) {
       setFormData({
         name: product.name || "",
@@ -56,10 +58,15 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         image_url: product.image_url || "",
       });
     }
-  }, [product]);
+  }, [product, tenantId]);
 
   const loadCategories = async () => {
-    const { data } = await supabase.from("categories").select("*").order("name");
+    if (!tenantId) return;
+    const { data } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("tenant_id", tenantId)
+      .order("name");
     if (data) setCategories(data);
   };
 

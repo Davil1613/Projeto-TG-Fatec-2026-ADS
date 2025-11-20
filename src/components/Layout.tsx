@@ -15,6 +15,7 @@ import TrialBanner from "./TrialBanner";
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Produtos", href: "/produtos", icon: Package },
+  { name: "Categorias", href: "/categorias", icon: Package },
   { name: "Movimentações", href: "/movimentacoes", icon: ArrowLeftRight },
   { name: "Estoque", href: "/estoque", icon: Warehouse },
   { name: "Relatórios", href: "/relatorios", icon: BarChart3 },
