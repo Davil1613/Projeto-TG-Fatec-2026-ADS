@@ -6,10 +6,14 @@ import {
   ArrowLeftRight, 
   Warehouse, 
   BarChart3,
-  LogOut
+  LogOut,
+  Moon,
+  Sun
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "./ui/button";
+import { useTheme } from "next-themes";
+import stockproIcon from "@/assets/stockpro-icon.png";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -27,15 +31,27 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background icon */}
+      <div 
+        className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url(${stockproIcon})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "50%"
+        }}
+      />
+      
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border">
+      <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-card/95 backdrop-blur-sm border-r border-border">
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center gap-2 border-b border-border px-6">
-            <Package className="h-8 w-8 text-primary" />
+            <img src={stockproIcon} alt="StockPro" className="h-8 w-8" />
             <div>
               <h1 className="text-xl font-bold text-foreground">StockPro</h1>
               <p className="text-xs text-muted-foreground">Controle de Estoque</p>
@@ -64,8 +80,20 @@ export default function Layout({ children }: LayoutProps) {
             })}
           </nav>
 
-          {/* Logout button */}
-          <div className="p-4 border-t border-border">
+          {/* Theme toggle and Logout */}
+          <div className="p-4 border-t border-border space-y-2">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-muted-foreground hover:text-accent-foreground hover:bg-accent"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5 mr-3" />
+              ) : (
+                <Moon className="h-5 w-5 mr-3" />
+              )}
+              {theme === "dark" ? "Tema Claro" : "Tema Escuro"}
+            </Button>
             <Button
               variant="ghost"
               className="w-full justify-start text-muted-foreground hover:text-accent-foreground hover:bg-accent"
@@ -79,7 +107,7 @@ export default function Layout({ children }: LayoutProps) {
       </aside>
 
       {/* Main content */}
-      <main className="pl-64">
+      <main className="pl-64 relative z-10">
         <div className="container mx-auto p-8">
           {children}
         </div>
