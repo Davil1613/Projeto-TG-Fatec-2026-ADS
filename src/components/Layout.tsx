@@ -41,7 +41,7 @@ export default function Layout({ children }: LayoutProps) {
         style={{
           backgroundImage: `url(${stockproIcon})`,
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+          backgroundPosition: "calc(50% + 128px) center",
           backgroundSize: "50%"
         }}
       />
