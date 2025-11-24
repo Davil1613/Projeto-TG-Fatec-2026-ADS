@@ -46,13 +46,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       password,
     });
     if (!error) {
-      navigate("/");
+      navigate("/dashboard");
     }
     return { error };
   };
 
   const signUp = async (email: string, password: string, companyName?: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `${window.location.origin}/dashboard`;
     const { error } = await supabase.auth.signUp({
       email,
       password,
