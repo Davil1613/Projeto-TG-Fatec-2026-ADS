@@ -1,6 +1,7 @@
 import { ArrowRight, CheckCircle, BarChart3, Package, Shield, Zap, Users, Clock, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import stockproIcon from "@/assets/stockpro-icon.png";
 import dashboardPreview from "@/assets/dashboard-preview.png";
 
@@ -95,8 +96,33 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header/Navbar */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img src={stockproIcon} alt="STOCKPRO" className="h-10 w-10" />
+              <h2 className="text-xl font-bold text-foreground">{CONFIG.productName}</h2>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <Link to="/auth">
+                <Button variant="ghost">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/auth">
+                <Button>
+                  Criar Conta
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/5 border-b border-border">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/5 border-b border-border pt-20">
         <div 
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -333,12 +359,12 @@ export default function Landing() {
             </div>
             
             <div className="flex flex-wrap gap-6 justify-center text-sm">
-              <a href="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors">
                 Login
-              </a>
-              <a href="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+              </Link>
+              <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors">
                 Criar Conta
-              </a>
+              </Link>
               <button onClick={handleCTA} className="text-muted-foreground hover:text-primary transition-colors">
                 Assinar
               </button>
