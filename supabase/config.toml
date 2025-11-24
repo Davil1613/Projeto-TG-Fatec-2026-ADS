@@ -1,1 +1,13 @@
 project_id = "zarhvqsyvrizwikoyuyi"
+
+[functions.activate-subscription]
+verify_jwt = false
+
+[functions.deactivate-subscription]
+verify_jwt = false
+
+[functions.mercadopago-webhook]
+verify_jwt = false
+
+[functions.check-subscription]
+verify_jwt = true
