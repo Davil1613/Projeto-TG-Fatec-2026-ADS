@@ -215,9 +215,13 @@ export type Database = {
           name: string
           owner_user_id: string
           plan: string
+          plan_expires_at: string | null
+          plan_status: string
           status: string
           subscribed_at: string | null
+          subscription_id: string | null
           trial_ends_at: string | null
+          trial_until: string | null
           updated_at: string | null
         }
         Insert: {
@@ -226,9 +230,13 @@ export type Database = {
           name: string
           owner_user_id: string
           plan?: string
+          plan_expires_at?: string | null
+          plan_status?: string
           status?: string
           subscribed_at?: string | null
+          subscription_id?: string | null
           trial_ends_at?: string | null
+          trial_until?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -237,9 +245,13 @@ export type Database = {
           name?: string
           owner_user_id?: string
           plan?: string
+          plan_expires_at?: string | null
+          plan_status?: string
           status?: string
           subscribed_at?: string | null
+          subscription_id?: string | null
           trial_ends_at?: string | null
+          trial_until?: string | null
           updated_at?: string | null
         }
         Relationships: []
