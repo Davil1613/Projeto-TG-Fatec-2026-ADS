@@ -8,6 +8,10 @@ interface Tenant {
   plan: "free" | "premium";
   status: "active" | "inactive";
   subscribed_at: string | null;
+  plan_status: "inactive" | "active";
+  subscription_id: string | null;
+  plan_expires_at: string | null;
+  trial_until: string | null;
 }
 
 export function useTenant() {

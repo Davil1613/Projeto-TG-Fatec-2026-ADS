@@ -64,7 +64,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
     });
     if (!error) {
-      navigate("/");
+      // Redirect to subscription page after signup
+      navigate("/assinatura-necessaria");
     }
     return { error };
   };

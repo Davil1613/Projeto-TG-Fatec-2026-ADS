@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SubscriptionProtectedRoute from "./components/SubscriptionProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
 import Categories from "./pages/Categories";
@@ -12,6 +13,7 @@ import Movements from "./pages/Movements";
 import Stock from "./pages/Stock";
 import Reports from "./pages/Reports";
 import Auth from "./pages/Auth";
+import SubscriptionRequired from "./pages/SubscriptionRequired";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,11 +27,14 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/assinatura-necessaria" element={<SubscriptionRequired />} />
             <Route
               path="/"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <SubscriptionProtectedRoute>
+                    <Dashboard />
+                  </SubscriptionProtectedRoute>
                 </ProtectedRoute>
               }
             />
@@ -37,7 +42,9 @@ const App = () => (
               path="/produtos"
               element={
                 <ProtectedRoute>
-                  <Products />
+                  <SubscriptionProtectedRoute>
+                    <Products />
+                  </SubscriptionProtectedRoute>
                 </ProtectedRoute>
               }
             />
@@ -45,7 +52,9 @@ const App = () => (
               path="/categorias"
               element={
                 <ProtectedRoute>
-                  <Categories />
+                  <SubscriptionProtectedRoute>
+                    <Categories />
+                  </SubscriptionProtectedRoute>
                 </ProtectedRoute>
               }
             />
@@ -53,7 +62,9 @@ const App = () => (
               path="/movimentacoes"
               element={
                 <ProtectedRoute>
-                  <Movements />
+                  <SubscriptionProtectedRoute>
+                    <Movements />
+                  </SubscriptionProtectedRoute>
                 </ProtectedRoute>
               }
             />
@@ -61,7 +72,9 @@ const App = () => (
               path="/estoque"
               element={
                 <ProtectedRoute>
-                  <Stock />
+                  <SubscriptionProtectedRoute>
+                    <Stock />
+                  </SubscriptionProtectedRoute>
                 </ProtectedRoute>
               }
             />
@@ -69,7 +82,9 @@ const App = () => (
               path="/relatorios"
               element={
                 <ProtectedRoute>
-                  <Reports />
+                  <SubscriptionProtectedRoute>
+                    <Reports />
+                  </SubscriptionProtectedRoute>
                 </ProtectedRoute>
               }
             />
