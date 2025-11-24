@@ -6,6 +6,18 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const authSchema = z.object({
+  email: z.string().email("Email inválido").max(255),
+  password: z.string()
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .max(100, "A senha deve ter no máximo 100 caracteres")
+    .regex(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula")
+    .regex(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula")
+    .regex(/[0-9]/, "A senha deve conter pelo menos um número"),
+  companyName: z.string().min(2, "Nome da empresa deve ter no mínimo 2 caracteres").max(100).optional()
+});
 import { Package } from "lucide-react";
 
 export default function Auth() {
@@ -17,6 +29,21 @@ export default function Auth() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar entrada
+    try {
+      authSchema.omit({ companyName: true }).parse({ email, password });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Dados inválidos",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
     const { error } = await signIn(email, password);
     if (error) {
       toast({
@@ -29,6 +56,21 @@ export default function Auth() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar entrada
+    try {
+      authSchema.parse({ email, password, companyName });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Dados inválidos",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
     const { error } = await signUp(email, password, companyName);
     if (error) {
       toast({
@@ -39,7 +81,7 @@ export default function Auth() {
     } else {
       toast({
         title: "Conta criada com sucesso!",
-        description: "Você já pode fazer login. Trial de 7 dias ativado!",
+        description: "Você será redirecionado para completar sua assinatura.",
       });
     }
   };
@@ -85,6 +127,7 @@ export default function Auth() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={8}
                   />
                 </div>
                 <Button type="submit" className="w-full">
@@ -123,7 +166,8 @@ export default function Auth() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={8}
+                    placeholder="Mín. 8 caracteres, maiúscula, minúscula e número"
                   />
                 </div>
                 <Button type="submit" className="w-full">
