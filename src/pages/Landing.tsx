@@ -2,6 +2,7 @@ import { ArrowRight, CheckCircle, BarChart3, Package, Shield, Zap, Users, Clock,
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import stockproIcon from "@/assets/stockpro-icon.png";
+import dashboardPreview from "@/assets/dashboard-preview.png";
 
 // Configuração editável
 const CONFIG = {
@@ -59,6 +60,18 @@ const CONFIG = {
       company: "Atacado Premium",
       text: "O melhor investimento que fiz! Economizo tempo e tenho controle total.",
       rating: 5
+    },
+    {
+      name: "Fernanda Oliveira",
+      company: "Comércio Estrela",
+      text: "Acabaram os erros de estoque! Agora sei exatamente o que tenho em tempo real.",
+      rating: 5
+    },
+    {
+      name: "João Santos",
+      company: "Mercado Central",
+      text: "Sistema completo e fácil de usar. Vale cada centavo da mensalidade!",
+      rating: 5
     }
   ],
   plan: {
@@ -66,11 +79,11 @@ const CONFIG = {
     price: "R$50/mês",
     features: [
       "Acesso total ao sistema",
-      "Suporte via WhatsApp",
       "Atualizações automáticas",
       "Dashboard completo",
       "Estoque ilimitado",
-      "Relatórios avançados"
+      "Relatórios avançados",
+      "Múltiplos usuários"
     ]
   }
 };
@@ -208,17 +221,11 @@ export default function Landing() {
             
             <Card className="border-border shadow-2xl overflow-hidden">
               <CardContent className="p-0">
-                <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-8 md:p-12 min-h-[400px] flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <BarChart3 className="h-24 w-24 text-primary mx-auto" />
-                    <p className="text-xl font-semibold text-foreground">
-                      Interface do Dashboard
-                    </p>
-                    <p className="text-muted-foreground">
-                      Simples, moderna e eficiente
-                    </p>
-                  </div>
-                </div>
+                <img 
+                  src={dashboardPreview} 
+                  alt="Interface do Dashboard STOCKPRO" 
+                  className="w-full h-auto object-cover"
+                />
               </CardContent>
             </Card>
           </div>
@@ -235,7 +242,7 @@ export default function Landing() {
             Empresas de todos os tamanhos confiam no STOCKPRO
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {CONFIG.testimonials.map((testimonial, index) => (
               <Card key={index} className="border-border hover:shadow-lg transition-all animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <CardContent className="p-6 space-y-4">
@@ -305,10 +312,6 @@ export default function Landing() {
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   <span>Seguro</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>Suporte</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4" />
