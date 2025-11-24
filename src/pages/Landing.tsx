@@ -1,0 +1,352 @@
+import { ArrowRight, CheckCircle, BarChart3, Package, Shield, Zap, Users, Clock, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import stockproIcon from "@/assets/stockpro-icon.png";
+
+// Configuração editável
+const CONFIG = {
+  productName: "STOCKPRO",
+  price: "R$50/mês",
+  checkoutUrl: "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=3e61f1af5985402f89e1ddb1a13c5da9",
+  hero: {
+    title: "Gerencie Seu Estoque de Forma Automática e Profissional",
+    subtitle: "O STOCKPRO te dá controle completo do seu estoque, produtos, vendas e relatórios — tudo sem complicação.",
+    cta: "Assinar agora – R$50/mês"
+  },
+  benefits: [
+    {
+      icon: BarChart3,
+      title: "Controle total do estoque",
+      description: "Visão completa de entradas, saídas e saldo em tempo real"
+    },
+    {
+      icon: Zap,
+      title: "Registro rápido de produtos",
+      description: "Cadastre produtos em segundos com interface intuitiva"
+    },
+    {
+      icon: Package,
+      title: "Atualização automática",
+      description: "Entradas e saídas atualizadas automaticamente"
+    },
+    {
+      icon: Shield,
+      title: "Acesso seguro e individual",
+      description: "Cada empresa tem seus dados isolados e protegidos"
+    }
+  ],
+  howItWorks: [
+    { step: "1", title: "Criar conta", description: "Cadastro rápido e sem burocracia" },
+    { step: "2", title: "Assinar o plano", description: "Pagamento seguro via Mercado Pago" },
+    { step: "3", title: "Acessar painel exclusivo", description: "Dashboard completo e intuitivo" },
+    { step: "4", title: "Começar a usar", description: "Cadastre produtos e gerencie estoque" }
+  ],
+  testimonials: [
+    {
+      name: "Carlos Silva",
+      company: "Distribuidora São Paulo",
+      text: "Antes eu perdia horas com planilhas. Agora controlo tudo em minutos!",
+      rating: 5
+    },
+    {
+      name: "Marina Costa",
+      company: "Loja Maria Imports",
+      text: "Interface simples e intuitiva. Minha equipe aprendeu a usar no primeiro dia.",
+      rating: 5
+    },
+    {
+      name: "Roberto Almeida",
+      company: "Atacado Premium",
+      text: "O melhor investimento que fiz! Economizo tempo e tenho controle total.",
+      rating: 5
+    }
+  ],
+  plan: {
+    name: "Plano Único",
+    price: "R$50/mês",
+    features: [
+      "Acesso total ao sistema",
+      "Suporte via WhatsApp",
+      "Atualizações automáticas",
+      "Dashboard completo",
+      "Estoque ilimitado",
+      "Relatórios avançados"
+    ]
+  }
+};
+
+export default function Landing() {
+  const handleCTA = () => {
+    window.open(CONFIG.checkoutUrl, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/5 border-b border-border">
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url(${stockproIcon})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            backgroundSize: "40%"
+          }}
+        />
+        
+        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+          <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-8 animate-fade-in">
+            <img src={stockproIcon} alt="STOCKPRO" className="h-20 w-20 md:h-24 md:w-24" />
+            
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
+              {CONFIG.hero.title}
+            </h1>
+            
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+              {CONFIG.hero.subtitle}
+            </p>
+            
+            <Button 
+              size="lg" 
+              className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:scale-105"
+              onClick={handleCTA}
+            >
+              {CONFIG.hero.cta}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            
+            <p className="text-sm text-muted-foreground">
+              ✓ Sem fidelidade • ✓ Cancele quando quiser • ✓ Suporte incluído
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-16 md:py-24 bg-card/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-12">
+            Por que escolher o STOCKPRO?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {CONFIG.benefits.map((benefit, index) => (
+              <Card 
+                key={index} 
+                className="border-border hover:border-primary/50 transition-all hover:shadow-lg hover:scale-105 animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <CardContent className="p-6 text-center space-y-4">
+                  <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <benefit.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-bold text-lg text-foreground">{benefit.title}</h3>
+                  <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
+            Como funciona?
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Em apenas 4 passos simples você está pronto para gerenciar seu estoque
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {CONFIG.howItWorks.map((step, index) => (
+              <div key={index} className="relative text-center animate-fade-in" style={{ animationDelay: `${index * 150}ms` }}>
+                <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold text-primary-foreground mb-4 shadow-lg">
+                  {step.step}
+                </div>
+                <h3 className="font-bold text-lg text-foreground mb-2">{step.title}</h3>
+                <p className="text-sm text-muted-foreground">{step.description}</p>
+                
+                {index < CONFIG.howItWorks.length - 1 && (
+                  <ArrowRight className="hidden lg:block absolute top-8 -right-4 h-6 w-6 text-muted-foreground/30" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Product Showcase */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-accent/5 to-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                Dashboard completo e intuitivo
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Visualize todos os dados importantes do seu estoque em uma única tela. Produtos, movimentações, alertas de estoque baixo e relatórios detalhados.
+              </p>
+              
+              <ul className="space-y-3">
+                {[
+                  "Listagem completa de produtos com fotos",
+                  "Controle de entradas e saídas em tempo real",
+                  "Alertas automáticos de estoque baixo",
+                  "Relatórios de vendas e movimentações",
+                  "Categorização inteligente",
+                  "Histórico completo de operações"
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 text-foreground">
+                    <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <Card className="border-border shadow-2xl overflow-hidden">
+              <CardContent className="p-0">
+                <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-8 md:p-12 min-h-[400px] flex items-center justify-center">
+                  <div className="text-center space-y-4">
+                    <BarChart3 className="h-24 w-24 text-primary mx-auto" />
+                    <p className="text-xl font-semibold text-foreground">
+                      Interface do Dashboard
+                    </p>
+                    <p className="text-muted-foreground">
+                      Simples, moderna e eficiente
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 md:py-24 bg-card/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
+            O que nossos clientes dizem
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Empresas de todos os tamanhos confiam no STOCKPRO
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {CONFIG.testimonials.map((testimonial, index) => (
+              <Card key={index} className="border-border hover:shadow-lg transition-all animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <CardContent className="p-6 space-y-4">
+                  <div className="flex gap-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-warning text-warning" />
+                    ))}
+                  </div>
+                  
+                  <p className="text-foreground italic">"{testimonial.text}"</p>
+                  
+                  <div className="flex items-center gap-3 pt-4 border-t border-border">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">{testimonial.name}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-primary/10 via-background to-accent/5">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
+            Plano simples e transparente
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Sem taxas ocultas, sem surpresas. Apenas uma assinatura mensal com tudo incluído.
+          </p>
+          
+          <Card className="max-w-md mx-auto border-2 border-primary shadow-2xl">
+            <CardContent className="p-8 space-y-6">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-foreground mb-2">{CONFIG.plan.name}</h3>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-5xl font-bold text-primary">{CONFIG.plan.price}</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">Sem fidelidade • Cancele quando quiser</p>
+              </div>
+              
+              <ul className="space-y-3">
+                {CONFIG.plan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-3 text-foreground">
+                    <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <Button 
+                size="lg" 
+                className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                onClick={handleCTA}
+              >
+                Assinar agora – {CONFIG.price}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              
+              <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground pt-4 border-t border-border">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  <span>Seguro</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <span>Suporte</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Garantia</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-card border-t border-border py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="flex items-center gap-3">
+              <img src={stockproIcon} alt="STOCKPRO" className="h-10 w-10" />
+              <h3 className="text-2xl font-bold text-foreground">{CONFIG.productName}</h3>
+            </div>
+            
+            <div className="flex flex-wrap gap-6 justify-center text-sm">
+              <a href="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+                Login
+              </a>
+              <a href="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+                Criar Conta
+              </a>
+              <button onClick={handleCTA} className="text-muted-foreground hover:text-primary transition-colors">
+                Assinar
+              </button>
+            </div>
+            
+            <p className="text-sm text-muted-foreground text-center">
+              Sistema em nuvem seguro – Todos os direitos reservados © 2025 {CONFIG.productName}
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

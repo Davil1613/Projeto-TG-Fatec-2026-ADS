@@ -16,7 +16,7 @@ import { useTheme } from "next-themes";
 import stockproIcon from "@/assets/stockpro-icon.png";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Produtos", href: "/produtos", icon: Package },
   { name: "Categorias", href: "/categorias", icon: Package },
   { name: "Movimentações", href: "/movimentacoes", icon: ArrowLeftRight },
