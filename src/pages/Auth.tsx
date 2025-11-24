@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const authSchema = z.object({
   email: z.string().email("Email inválido").max(255),
@@ -26,8 +27,21 @@ export default function Auth() {
   const [companyName, setCompanyName] = useState("");
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  // Detectar se o usuário veio do link de recuperação de senha
+  useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const type = hashParams.get('type');
+    
+    if (type === 'recovery') {
+      setIsResettingPassword(true);
+    }
+  }, []);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +117,6 @@ export default function Auth() {
       return;
     }
 
-    const { supabase } = await import("@/integrations/supabase/client");
     const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
       redirectTo: `${window.location.origin}/auth`,
     });
@@ -124,6 +137,55 @@ export default function Auth() {
     }
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validar senha
+    try {
+      authSchema.pick({ password: true }).parse({ password: newPassword });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Senha inválida",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    // Verificar se as senhas conferem
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Senhas não conferem",
+        description: "As senhas digitadas não são iguais.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      toast({
+        title: "Erro ao atualizar senha",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Senha atualizada!",
+        description: "Sua senha foi alterada com sucesso. Faça login com a nova senha.",
+      });
+      setIsResettingPassword(false);
+      setNewPassword("");
+      setConfirmPassword("");
+      window.history.replaceState({}, document.title, "/auth");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-success/5 p-4">
       <Card className="w-full max-w-md">
@@ -133,13 +195,48 @@ export default function Auth() {
               <Package className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Sistema de Estoque</CardTitle>
+          <CardTitle className="text-2xl">
+            {isResettingPassword ? "Redefinir Senha" : "Sistema de Estoque"}
+          </CardTitle>
           <CardDescription>
-            Faça login ou crie sua conta para continuar
+            {isResettingPassword 
+              ? "Digite sua nova senha abaixo" 
+              : "Faça login ou crie sua conta para continuar"}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          {isResettingPassword ? (
+            <form onSubmit={handleUpdatePassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="new-password">Nova Senha</Label>
+                <Input
+                  id="new-password"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  placeholder="Mín. 8 caracteres, maiúscula, minúscula e número"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirmar Nova Senha</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  placeholder="Digite a senha novamente"
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Atualizar Senha
+              </Button>
+            </form>
+          ) : (
+            <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="signup">Criar Conta</TabsTrigger>
@@ -252,6 +349,7 @@ export default function Auth() {
               </form>
             </TabsContent>
           </Tabs>
+          )}
         </CardContent>
       </Card>
     </div>
