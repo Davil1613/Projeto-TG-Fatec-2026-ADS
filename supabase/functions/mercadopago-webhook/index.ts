@@ -6,6 +6,78 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Função para validar assinatura do webhook do Mercado Pago
+async function validateWebhookSignature(req: Request): Promise<boolean> {
+  try {
+    const mpWebhookSecret = Deno.env.get('MP_WEBHOOK_SECRET');
+    if (!mpWebhookSecret) {
+      console.warn('MP_WEBHOOK_SECRET not configured, skipping signature validation');
+      return true; // Allow if secret not configured (for backward compatibility)
+    }
+
+    const signature = req.headers.get('x-signature');
+    const requestId = req.headers.get('x-request-id');
+    
+    if (!signature || !requestId) {
+      console.error('Missing signature headers');
+      return false;
+    }
+
+    // Extrair ts e v1 da assinatura
+    const signatureParts: Record<string, string> = {};
+    signature.split(',').forEach(part => {
+      const [key, value] = part.trim().split('=');
+      if (key && value) signatureParts[key] = value;
+    });
+
+    const ts = signatureParts['ts'];
+    const hash = signatureParts['v1'];
+
+    if (!ts || !hash) {
+      console.error('Invalid signature format');
+      return false;
+    }
+
+    // Construir o manifest (data string) para validação
+    const url = new URL(req.url);
+    const dataId = url.searchParams.get('data.id') || url.searchParams.get('id') || '';
+    const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
+
+    // Calcular HMAC SHA256
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(mpWebhookSecret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    
+    const signatureBytes = await crypto.subtle.sign(
+      'HMAC',
+      key,
+      encoder.encode(manifest)
+    );
+
+    const computedHash = Array.from(new Uint8Array(signatureBytes))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    const isValid = computedHash === hash;
+    if (!isValid) {
+      console.error('Signature validation failed', { 
+        computed: computedHash.substring(0, 10) + '...', 
+        received: hash.substring(0, 10) + '...' 
+      });
+    }
+    
+    return isValid;
+  } catch (error) {
+    console.error('Error validating signature:', error);
+    return false;
+  }
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -13,6 +85,16 @@ serve(async (req) => {
   }
 
   try {
+    // Validar assinatura do webhook ANTES de processar
+    const isValidSignature = await validateWebhookSignature(req);
+    if (!isValidSignature) {
+      console.error('Invalid webhook signature - possible forgery attempt');
+      return new Response(
+        JSON.stringify({ error: 'Invalid signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const mpAccessToken = Deno.env.get('MP_ACCESS_TOKEN')!;
