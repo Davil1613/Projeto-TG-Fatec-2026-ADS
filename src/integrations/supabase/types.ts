@@ -146,6 +146,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "stock_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "stock_movements_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
@@ -271,7 +278,66 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      products_public: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          current_stock: number | null
+          description: string | null
+          id: string | null
+          image_url: string | null
+          min_stock: number | null
+          name: string | null
+          sale_price: number | null
+          sku: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          current_stock?: number | null
+          description?: string | null
+          id?: string | null
+          image_url?: string | null
+          min_stock?: number | null
+          name?: string | null
+          sale_price?: number | null
+          sku?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          current_stock?: number | null
+          description?: string | null
+          id?: string | null
+          image_url?: string | null
+          min_stock?: number | null
+          name?: string | null
+          sale_price?: number | null
+          sku?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       get_user_tenant_id: { Args: { _user_id: string }; Returns: string }

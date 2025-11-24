@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/useUserRole";
 import StockIndicator from "@/components/StockIndicator";
 
 interface Product {
@@ -37,11 +38,13 @@ export default function Stock() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const { toast } = useToast();
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     loadProducts();
 
     // Subscribe to realtime updates
+    // Note: Realtime subscription is on the base products table
     const channel = supabase
       .channel("products_changes")
       .on(
@@ -60,16 +63,19 @@ export default function Stock() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [isAdmin]);
 
   const loadProducts = async () => {
     try {
+      // Use products_public view for non-admin users
+      const tableName = isAdmin ? "products" : "products_public";
+      
       const { data, error } = await supabase
-        .from("products")
+        .from(tableName as any)
         .select("*, categories(name)");
 
       if (error) throw error;
-      setProducts(data || []);
+      setProducts((data || []) as unknown as Product[]);
     } catch (error: any) {
       toast({
         title: "Erro ao carregar estoque",
