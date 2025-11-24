@@ -10,7 +10,7 @@ import { ptBR } from "date-fns/locale";
 export default function SubscriptionRequired() {
   const navigate = useNavigate();
   const { isSubscriptionActive, isInTrial, trialEndDate, loading } = useSubscription();
-  const [checkoutUrl, setCheckoutUrl] = useState("https://seu-checkout-aqui.com");
+  const checkoutUrl = "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=3e61f1af5985402f89e1ddb1a13c5da9";
 
   useEffect(() => {
     // Se a assinatura estiver ativa, redirecionar para dashboard
