@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/useUserRole";
 import ProductForm from "@/components/ProductForm";
 import StockIndicator from "@/components/StockIndicator";
 
@@ -31,7 +32,7 @@ interface Product {
   current_stock: number;
   min_stock: number;
   sale_price: number;
-  cost_price: number;
+  cost_price?: number;
   categories?: { name: string } | null;
 }
 
@@ -41,20 +42,25 @@ export default function Products() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const { toast } = useToast();
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [isAdmin]);
 
   const loadProducts = async () => {
     try {
+      // Admins query from products table (with cost_price)
+      // Non-admins query from products_public view (without cost_price)
+      const tableName = isAdmin ? "products" : "products_public";
+      
       const { data, error } = await supabase
-        .from("products")
+        .from(tableName as any)
         .select("*, categories(name)")
         .order("name");
 
       if (error) throw error;
-      setProducts(data || []);
+      setProducts((data || []) as unknown as Product[]);
     } catch (error: any) {
       toast({
         title: "Erro ao carregar produtos",

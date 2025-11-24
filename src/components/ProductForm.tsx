@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useTenant } from "@/hooks/useTenant";
+import { useUserRole } from "@/hooks/useUserRole";
 
 interface Category {
   id: string;
@@ -40,6 +41,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { tenantId } = useTenant();
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     if (tenantId) {
@@ -85,17 +87,21 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
     setLoading(true);
 
     try {
-      const productData = {
+      const productData: any = {
         name: formData.name,
         sku: formData.sku,
         category_id: formData.category_id || null,
         description: formData.description || null,
         sale_price: parseFloat(formData.sale_price),
-        cost_price: parseFloat(formData.cost_price),
         current_stock: parseInt(formData.current_stock),
         min_stock: parseInt(formData.min_stock),
         image_url: formData.image_url || null,
       };
+
+      // Only include cost_price if user is admin
+      if (isAdmin) {
+        productData.cost_price = parseFloat(formData.cost_price);
+      }
 
       if (product) {
         const { error } = await supabase
@@ -178,17 +184,19 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="cost_price">Preço de Custo *</Label>
-          <Input
-            id="cost_price"
-            type="number"
-            step="0.01"
-            required
-            value={formData.cost_price}
-            onChange={(e) => setFormData({ ...formData, cost_price: e.target.value })}
-          />
-        </div>
+        {isAdmin && (
+          <div className="space-y-2">
+            <Label htmlFor="cost_price">Preço de Custo *</Label>
+            <Input
+              id="cost_price"
+              type="number"
+              step="0.01"
+              required={isAdmin}
+              value={formData.cost_price}
+              onChange={(e) => setFormData({ ...formData, cost_price: e.target.value })}
+            />
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor="sale_price">Preço de Venda *</Label>
