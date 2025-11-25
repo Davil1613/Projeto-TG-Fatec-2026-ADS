@@ -13,9 +13,9 @@ export default function SubscriptionRequired() {
   const checkoutUrl = "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=3e61f1af5985402f89e1ddb1a13c5da9";
 
   useEffect(() => {
-    // Se a assinatura estiver ativa, redirecionar para dashboard
+    // Se a assinatura estiver ativa ou em trial, redirecionar para dashboard
     if (!loading && (isSubscriptionActive || isInTrial)) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [isSubscriptionActive, isInTrial, loading, navigate]);
 
@@ -36,12 +36,12 @@ export default function SubscriptionRequired() {
         <CardHeader className="text-center">
           {isInTrial ? (
             <>
-              <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <CheckCircle className="h-6 w-6 text-blue-600" />
+              <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle className="h-6 w-6 text-green-600" />
               </div>
-              <CardTitle className="text-2xl">Você está no período de teste</CardTitle>
+              <CardTitle className="text-2xl">Período de Teste Ativo - 7 Dias Grátis</CardTitle>
               <CardDescription>
-                Seu período de teste expira em{" "}
+                Seu teste grátis expira em{" "}
                 {trialEndDate && format(trialEndDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
               </CardDescription>
             </>
@@ -50,9 +50,9 @@ export default function SubscriptionRequired() {
               <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center">
                 <AlertCircle className="h-6 w-6 text-destructive" />
               </div>
-              <CardTitle className="text-2xl">Sua assinatura não está ativa</CardTitle>
+              <CardTitle className="text-2xl">Período de teste expirado</CardTitle>
               <CardDescription>
-                Para acessar o sistema, você precisa de uma assinatura ativa
+                Para continuar acessando o sistema, assine por apenas R$50/mês
               </CardDescription>
             </>
           )}
@@ -66,6 +66,9 @@ export default function SubscriptionRequired() {
                 <span className="text-muted-foreground">/mês</span>
               </div>
             </div>
+            {!isInTrial && (
+              <p className="text-xs text-primary font-semibold mb-2">7 dias de teste GRÁTIS</p>
+            )}
             <ul className="space-y-2 mt-4">
               <li className="flex items-center text-sm">
                 <CheckCircle className="h-4 w-4 mr-2 text-primary" />
@@ -81,7 +84,7 @@ export default function SubscriptionRequired() {
               </li>
               <li className="flex items-center text-sm">
                 <CheckCircle className="h-4 w-4 mr-2 text-primary" />
-                Suporte prioritário
+                Dashboard completo
               </li>
             </ul>
           </div>
@@ -91,12 +94,12 @@ export default function SubscriptionRequired() {
             size="lg"
             onClick={() => window.open(checkoutUrl, "_blank")}
           >
-            Assinar agora R$ 50/mês
+            {isInTrial ? "Assinar agora - R$ 50/mês" : "Começar teste grátis"}
           </Button>
 
           {isInTrial && (
             <p className="text-xs text-center text-muted-foreground">
-              Você pode continuar usando o sistema gratuitamente até o fim do período de teste
+              Aproveite os 7 dias restantes e assine para continuar usando todas as funcionalidades após o teste
             </p>
           )}
 
