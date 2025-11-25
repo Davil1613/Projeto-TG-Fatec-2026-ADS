@@ -94,7 +94,7 @@ export default function SubscriptionRequired() {
             size="lg"
             onClick={() => window.open(checkoutUrl, "_blank")}
           >
-            {isInTrial ? "Assinar agora - R$ 50/mês" : "Começar teste grátis"}
+            {isInTrial ? "Assinar agora - R$ 50/mês" : "Assinar agora"}
           </Button>
 
           {isInTrial && (
