@@ -1,7 +1,7 @@
 import { ArrowRight, CheckCircle, BarChart3, Package, Shield, Zap, Users, Clock, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import stockproIcon from "@/assets/stockpro-icon.png";
 import dashboardPreview from "@/assets/dashboard-preview.png";
 
@@ -94,8 +94,10 @@ const CONFIG = {
 };
 
 export default function Landing() {
+  const navigate = useNavigate();
+  
   const handleCTA = () => {
-    window.open(CONFIG.checkoutUrl, '_blank');
+    navigate('/auth');
   };
 
   return (
