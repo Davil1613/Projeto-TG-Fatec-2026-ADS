@@ -9,11 +9,13 @@ import dashboardPreview from "@/assets/dashboard-preview.png";
 const CONFIG = {
   productName: "STOCKPRO",
   price: "R$50/mês",
+  trialDays: "7 dias",
   checkoutUrl: "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=3e61f1af5985402f89e1ddb1a13c5da9",
   hero: {
     title: "Gerencie Seu Estoque de Forma Automática e Profissional",
     subtitle: "O STOCKPRO te dá controle completo do seu estoque, produtos, vendas e relatórios — tudo sem complicação.",
-    cta: "Assinar agora – R$50/mês"
+    cta: "Começar teste grátis de 7 dias",
+    badge: "7 DIAS GRÁTIS"
   },
   benefits: [
     {
@@ -39,9 +41,9 @@ const CONFIG = {
   ],
   howItWorks: [
     { step: "1", title: "Criar conta", description: "Cadastro rápido e sem burocracia" },
-    { step: "2", title: "Assinar o plano", description: "Pagamento seguro via Mercado Pago" },
+    { step: "2", title: "Testar 7 dias grátis", description: "Use todas as funcionalidades sem pagar" },
     { step: "3", title: "Acessar painel exclusivo", description: "Dashboard completo e intuitivo" },
-    { step: "4", title: "Começar a usar", description: "Cadastre produtos e gerencie estoque" }
+    { step: "4", title: "Assinar e continuar", description: "Após o teste, assine por R$50/mês" }
   ],
   testimonials: [
     {
@@ -78,7 +80,9 @@ const CONFIG = {
   plan: {
     name: "Plano Único",
     price: "R$50/mês",
+    trial: "7 dias de teste GRÁTIS",
     features: [
+      "7 dias de teste grátis",
       "Acesso total ao sistema",
       "Atualizações automáticas",
       "Dashboard completo",
@@ -137,6 +141,12 @@ export default function Landing() {
           <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-8 animate-fade-in">
             <img src={stockproIcon} alt="STOCKPRO" className="h-20 w-20 md:h-24 md:w-24" />
             
+            <div className="inline-block">
+              <span className="bg-primary/20 text-primary px-6 py-2 rounded-full text-sm font-bold border-2 border-primary animate-pulse">
+                {CONFIG.hero.badge}
+              </span>
+            </div>
+            
             <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
               {CONFIG.hero.title}
             </h1>
@@ -155,7 +165,7 @@ export default function Landing() {
             </Button>
             
             <p className="text-sm text-muted-foreground">
-              ✓ Sem fidelidade • ✓ Cancele quando quiser • ✓ Suporte incluído
+              ✓ Teste grátis por 7 dias • ✓ Sem cartão de crédito • ✓ Cancele quando quiser
             </p>
           </div>
         </div>
@@ -309,11 +319,15 @@ export default function Landing() {
           <Card className="max-w-md mx-auto border-2 border-primary shadow-2xl">
             <CardContent className="p-8 space-y-6">
               <div className="text-center">
+                <div className="inline-block bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-bold mb-3">
+                  {CONFIG.plan.trial}
+                </div>
                 <h3 className="text-2xl font-bold text-foreground mb-2">{CONFIG.plan.name}</h3>
                 <div className="flex items-baseline justify-center gap-2">
                   <span className="text-5xl font-bold text-primary">{CONFIG.plan.price}</span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">Sem fidelidade • Cancele quando quiser</p>
+                <p className="text-sm text-muted-foreground mt-2">após o período de teste</p>
+                <p className="text-xs text-muted-foreground">Sem fidelidade • Cancele quando quiser</p>
               </div>
               
               <ul className="space-y-3">
@@ -330,9 +344,12 @@ export default function Landing() {
                 className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:scale-105"
                 onClick={handleCTA}
               >
-                Assinar agora – {CONFIG.price}
+                Começar teste grátis
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
+              <p className="text-xs text-center text-muted-foreground">
+                Comece agora e use por 7 dias gratuitamente
+              </p>
               
               <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground pt-4 border-t border-border">
                 <div className="flex items-center gap-2">
