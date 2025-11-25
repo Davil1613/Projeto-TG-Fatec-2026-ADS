@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import stockproIcon from "@/assets/stockpro-icon.png";
+import TrialBanner from "./TrialBanner";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -109,6 +110,7 @@ export default function Layout({ children }: LayoutProps) {
       {/* Main content */}
       <main className="pl-64 relative z-10">
         <div className="container mx-auto p-8">
+          <TrialBanner />
           {children}
         </div>
       </main>
