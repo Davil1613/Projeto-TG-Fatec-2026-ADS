@@ -2,11 +2,10 @@ import { AlertCircle, Clock, ArrowRight } from "lucide-react";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 
 export default function TrialBanner() {
   const { isInTrial, trialEndDate, isSubscriptionActive, tenant } = useSubscription();
-  const navigate = useNavigate();
+  const checkoutUrl = "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=3e61f1af5985402f89e1ddb1a13c5da9";
 
   // Calculate days remaining for trial
   const getTrialDaysRemaining = () => {
@@ -41,7 +40,7 @@ export default function TrialBanner() {
           </span>
           <Button 
             size="sm" 
-            onClick={() => navigate('/assinatura-necessaria')}
+            onClick={() => window.open(checkoutUrl, '_blank')}
             className="ml-4"
           >
             Assinar agora
