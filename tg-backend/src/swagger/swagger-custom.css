@@ -1,0 +1,92 @@
+/* swagger-custom.css */
+
+body {
+  background: #fff !important;
+}
+
+.swagger-ui .topbar {
+  background-color: #512D6D !important;
+  position: relative;
+}
+
+.swagger-ui .info .version-stamp {
+  background-color: #512D6D !important;
+  color: #ffff !important;
+}
+.swagger-ui .info .version {
+  color: #ffff !important;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.swagger-ui .modal-ux-content {
+  background-color: #fff !important;
+  padding: 0px !important;
+}
+
+.swagger-ui .auth-btn-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.swagger-ui .auth-container .auth-btn-wrapper .button {
+  background-color: #512D6D !important;
+  border-color: #512D6D !important;
+  color: white !important;
+  margin-right: 8px !important;
+}
+
+.swagger-ui .scheme-container select#servers {
+  background-color: #512D6D !important;
+  color: #FFFFFF !important;
+  border: 1px solid #512D6D !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.swagger-ui .topbar-wrapper img[alt="Swagger UI"],
+.swagger-ui .topbar-wrapper .link,
+.swagger-ui .topbar-wrapper .link:after,
+.swagger-ui .topbar-wrapper .link span,
+.swagger-ui .topbar-wrapper .topbar-title {
+  display: none !important;
+}
+
+.swagger-ui .topbar-wrapper::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  background: url('stockpro-icon.png') no-repeat left center;
+  background-size: contain;
+  width: 120px;
+  height: 40px;
+  margin-right: 16px;
+}
+
+.swagger-ui .topbar .download-url-wrapper input,
+.swagger-ui .topbar .download-url-wrapper select {
+  background: #fff !important;
+  color: #512D6D !important;
+}
+
+.swagger-ui .info .title,
+.swagger-ui .info .base-url {
+  color: #512D6D !important;
+}
+
+.swagger-ui .scheme-container {
+  background: #fff !important;
+}
+
+.swagger-ui .responses-inner {
+  background: #fff !important;
+}
+
+.swagger-ui .response-col_status {
+  color: #512D6D !important;
+}
