@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { formatCurrency } from "@/lib/utils";
 import Layout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import { Images, Search } from "lucide-react";
@@ -119,7 +120,7 @@ export default function Stock() {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-bold text-foreground">Estoque Atual</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Estoque Atual</h1>
           <p className="text-muted-foreground mt-2">
             Visualize e monitore seu estoque em tempo real
           </p>
@@ -157,7 +158,7 @@ export default function Stock() {
             <SelectContent>
               <SelectItem value="name">Nome</SelectItem>
               <SelectItem value="stock">Quantidade</SelectItem>
-              <SelectItem value="price">Preco</SelectItem>
+              <SelectItem value="price">Preço</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -171,8 +172,8 @@ export default function Stock() {
                 <TableHead>Produto</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead className="text-right">Quantidade</TableHead>
-                <TableHead className="text-right">Estoque Minimo</TableHead>
-                <TableHead className="text-right">Preco</TableHead>
+                <TableHead className="text-right">Estoque Mínimo</TableHead>
+                <TableHead className="text-right">Preço</TableHead>
                 <TableHead className="text-right">Valor Total</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
@@ -214,9 +215,9 @@ export default function Stock() {
                     <TableCell>{product.category?.name || "-"}</TableCell>
                     <TableCell className="text-right font-semibold">{product.currentStock}</TableCell>
                     <TableCell className="text-right text-muted-foreground">{product.minStock}</TableCell>
-                    <TableCell className="text-right">R$ {Number(product.salePrice).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{formatCurrency(Number(product.salePrice))}</TableCell>
                     <TableCell className="text-right font-semibold">
-                      R$ {(Number(product.currentStock) * Number(product.salePrice)).toFixed(2)}
+                      {formatCurrency(Number(product.currentStock) * Number(product.salePrice))}
                     </TableCell>
                     <TableCell>
                       <StockIndicator currentStock={product.currentStock} minStock={product.minStock} />

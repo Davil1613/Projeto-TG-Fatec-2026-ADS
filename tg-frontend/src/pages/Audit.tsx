@@ -26,15 +26,17 @@ interface AuditLog {
 }
 
 const actionLabel: Record<string, string> = {
-  create: "Criacao",
-  update: "Edicao",
-  delete: "Exclusao",
+  create: "Criação",
+  update: "Edição",
+  delete: "Exclusão",
 };
 
 const entityLabel: Record<string, string> = {
   product: "Produto",
   category: "Categoria",
-  movement: "Movimentacao",
+  movement: "Movimentação",
+  user: "Usuário",
+  subscription: "Assinatura",
 };
 
 export default function Audit() {
@@ -62,12 +64,12 @@ export default function Audit() {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="flex items-center gap-3 text-4xl font-bold text-foreground">
+          <h1 className="flex items-center gap-3 text-3xl md:text-4xl font-bold text-foreground">
             <History className="h-9 w-9" />
             Auditoria
           </h1>
           <p className="text-muted-foreground mt-2">
-            Acompanhe acoes importantes realizadas no sistema
+            Acompanhe ações importantes realizadas no sistema
           </p>
         </div>
 
@@ -76,11 +78,11 @@ export default function Audit() {
             <TableHeader>
               <TableRow>
                 <TableHead>Data/Hora</TableHead>
-                <TableHead>Acao</TableHead>
+                <TableHead>Ação</TableHead>
                 <TableHead>Modulo</TableHead>
                 <TableHead>ID</TableHead>
-                <TableHead>Descricao</TableHead>
-                <TableHead>Usuario</TableHead>
+                <TableHead>Descrição</TableHead>
+                <TableHead>Usuário</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

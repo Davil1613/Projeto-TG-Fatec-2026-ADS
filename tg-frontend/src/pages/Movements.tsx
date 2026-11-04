@@ -70,9 +70,9 @@ export default function Movements() {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">Movimentações</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">Movimentações</h1>
             <p className="text-muted-foreground mt-2">
               Registre entradas e saídas de estoque
             </p>

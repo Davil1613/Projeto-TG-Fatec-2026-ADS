@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import ProductController from '../controllers/productController';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticateToken, requireAdmin } from '../middlewares/auth';
+import { requireActiveSubscription } from '../middlewares/subscription';
 
 const productRouter = Router();
-productRouter.use(authenticateToken);
+productRouter.use(authenticateToken, requireActiveSubscription);
 
 /**
 * @swagger
@@ -208,7 +209,7 @@ productRouter
  *       400:
  *         description: Requisição inválida
  */
-  .post('/', (req, res, next) =>
+  .post('/', requireAdmin, (req, res, next) =>
     ProductController.create(req, res, next))
 
 /**
@@ -290,7 +291,7 @@ productRouter
  *       404:
  *         description: Produto não encontrado
  */
-  .put('/:id', (req, res, next) =>
+  .put('/:id', requireAdmin, (req, res, next) =>
     ProductController.updateById(req, res, next))
 
 /**
@@ -313,7 +314,7 @@ productRouter
  *       404:
  *         description: Produto não encontrado
  */
-  .delete('/:id', (req, res, next) =>
+  .delete('/:id', requireAdmin, (req, res, next) =>
     ProductController.deleteById(req, res, next))
 
 export default productRouter;

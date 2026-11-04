@@ -1,0 +1,5 @@
+# Documentos acadêmicos em revisão (avaliação cega do CODITEC e versões do TG ainda não entregues)
+documentacao/coditec/
+documentacao/*.docx
+documentacao/*.pdf
+documentacao/email_*.md

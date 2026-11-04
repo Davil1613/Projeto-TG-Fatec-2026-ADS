@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import UserController from '../controllers/userController';
 import { authenticateToken, requireAdmin } from '../middlewares/auth';
+import { requireActiveSubscription } from '../middlewares/subscription';
 
 const userRouter = Router();
 
@@ -135,7 +136,7 @@ userRouter
    *         description: Requisição inválida
    */
   .post('/', (req, res, next) => UserController.create(req, res, next))
-  .use(authenticateToken, requireAdmin)
+  .use(authenticateToken, requireAdmin, requireActiveSubscription)
 
   /**
    * @swagger
@@ -155,6 +156,34 @@ userRouter
    *                 $ref: '#/components/schemas/User'
    */
   .get('/', (req, res, next) => UserController.getAll(req, res, next))
+
+  /**
+   * @swagger
+   * /api/v1/users/members:
+   *   post:
+   *     tags:
+   *       - Usuários
+   *     summary: Cria um usuário da equipe (perfil user) na empresa do administrador
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               name:
+   *                 type: string
+   *               email:
+   *                 type: string
+   *               password:
+   *                 type: string
+   *     responses:
+   *       201:
+   *         description: Usuário criado com perfil de acesso limitado
+   *       403:
+   *         description: Acesso restrito a administradores
+   */
+  .post('/members', (req, res, next) => UserController.createMember(req, res, next))
 
   /**
    * @swagger

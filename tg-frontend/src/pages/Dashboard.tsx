@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { formatCurrency } from "@/lib/utils";
 import Layout from "@/components/Layout";
 import MetricCard from "@/components/MetricCard";
 import {
@@ -12,6 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/useUserRole";
 import StockIndicator from "@/components/StockIndicator";
 import { getProducts } from "@/integrations/productsApi";
 
@@ -47,6 +49,7 @@ export default function Dashboard() {
   });
   const [restockProducts, setRestockProducts] = useState<Product[]>([]);
   const { toast } = useToast();
+  const { isAdmin } = useUserRole();
 
   useEffect(() => {
     loadDashboardData();
@@ -110,8 +113,8 @@ export default function Dashboard() {
     <Layout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-4xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground mt-2">Visao geral do seu estoque</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-2">Visão geral do seu estoque</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -125,20 +128,22 @@ export default function Dashboard() {
           />
           <MetricCard
             title="Valor de Venda"
-            value={`R$ ${stats.totalSaleValue.toFixed(2)}`}
+            value={formatCurrency(stats.totalSaleValue)}
             icon={DollarSign}
           />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className={isAdmin ? "grid gap-6 md:grid-cols-3" : "grid gap-6 md:grid-cols-1"}>
+          {isAdmin && (
+          <>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Custo em Estoque</CardTitle>
               <Wallet className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">R$ {stats.totalCostValue.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">Baseado no preco de custo cadastrado</p>
+              <div className="text-2xl font-bold">{formatCurrency(stats.totalCostValue)}</div>
+              <p className="text-xs text-muted-foreground">Baseado no preço de custo cadastrado</p>
             </CardContent>
           </Card>
 
@@ -148,10 +153,12 @@ export default function Dashboard() {
               <TrendingUp className="h-4 w-4 text-success" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">R$ {estimatedProfit.toFixed(2)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(estimatedProfit)}</div>
               <p className="text-xs text-muted-foreground">Venda estimada menos custo do estoque</p>
             </CardContent>
           </Card>
+          </>
+          )}
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -161,10 +168,10 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold">{stats.criticalStockCount}</span>
-                <Badge variant="destructive">criticos</Badge>
+                <Badge variant="destructive">críticos</Badge>
               </div>
               <p className="text-xs text-muted-foreground">
-                {stats.emptyStockCount} produto(s) ja estao esgotados
+                {stats.emptyStockCount} produto(s) já estão esgotados
               </p>
             </CardContent>
           </Card>
@@ -175,7 +182,7 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5 text-warning" />
-                Sugestao de Reposicao
+                Sugestão de Reposição
               </CardTitle>
             </CardHeader>
             <CardContent>

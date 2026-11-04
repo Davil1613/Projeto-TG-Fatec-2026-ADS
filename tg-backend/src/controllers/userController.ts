@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import userService from '../services/userService';
+import auditLogService from '../services/auditLogService';
 
 class UserController {
   // Registro público: cria admin + tenant do cliente
@@ -7,6 +8,27 @@ class UserController {
     try {
       const { name, email, password } = req.body;
       const user = await userService.createAdminWithTenant({ name, email, password, role: 'admin' });
+      const { password: _password, ...userSafe } = user.toJSON();
+      res.status(201).json(userSafe);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // Equipe: o administrador cria usuários de acesso limitado na própria empresa
+  async createMember(req: Request, res: Response, next: NextFunction) {
+    try {
+      const tenantId = req.user!.tenantId;
+      const { name, email, password } = req.body;
+      const user = await userService.createMember(tenantId, { name, email, password });
+      await auditLogService.create({
+        tenantId,
+        userId: req.user!.id,
+        action: 'create',
+        entity: 'user',
+        entityId: user.id,
+        description: `Usuário da equipe criado: ${user.name}`,
+      });
       const { password: _password, ...userSafe } = user.toJSON();
       res.status(201).json(userSafe);
     } catch (err) {
@@ -55,8 +77,17 @@ class UserController {
   async deleteById(req: Request, res: Response, next: NextFunction) {
     try {
       const tenantId = req.user!.tenantId;
-      const success = await userService.deleteById(Number(req.params.id), tenantId);
+      const userId = Number(req.params.id);
+      const success = await userService.deleteById(userId, tenantId);
       if (!success) return res.status(404).json({ error: 'User not found' });
+      await auditLogService.create({
+        tenantId,
+        userId: req.user!.id,
+        action: 'delete',
+        entity: 'user',
+        entityId: userId,
+        description: `Usuário da equipe removido: ${userId}`,
+      });
       return res.status(204).send();
     } catch (err) {
       return next(err);

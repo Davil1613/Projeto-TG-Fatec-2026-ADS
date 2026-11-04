@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import MovementController from '../controllers/movementController';
 import { authenticateToken } from '../middlewares/auth';
+import { requireActiveSubscription } from '../middlewares/subscription';
 
 const movementRouter = Router();
-movementRouter.use(authenticateToken);
+movementRouter.use(authenticateToken, requireActiveSubscription);
 
 /**
 * @swagger
@@ -177,58 +178,6 @@ movementRouter
    *       404:
    *         description: Movimentação não encontrada
    */
-  .get('/:id', (req, res, next) => MovementController.getById(req, res, next))
-
-  /**
-   * @swagger
-   * /api/v1/movements/{id}:
-   *   put:
-   *     tags:
-   *       - Movimentações
-   *     summary: Atualiza uma movimentação por ID
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *         description: ID da movimentação
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/MovementUpdate'
-   *     responses:
-   *       204:
-   *         description: Movimentação atualizada com sucesso
-   *       400:
-   *         description: Requisição inválida
-   *       404:
-   *         description: Movimentação não encontrada
-   */
-  .put('/:id', (req, res, next) => MovementController.updateById(req, res, next))
-
-  /**
-   * @swagger
-   * /api/v1/movements/{id}:
-   *   delete:
-   *     tags:
-   *       - Movimentações
-   *     summary: Exclui uma movimentação por ID
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *         description: ID da movimentação
-   *     responses:
-   *       204:
-   *         description: Movimentação excluída com sucesso
-   *       404:
-   *         description: Movimentação não encontrada
-   */
-  .delete('/:id', (req, res, next) => MovementController.deleteById(req, res, next));
+  .get('/:id', (req, res, next) => MovementController.getById(req, res, next));
 
 export default movementRouter;

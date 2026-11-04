@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../configs/jwt';
 import userService from '../services/userService';
 import emailService from '../services/emailService';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
 class AuthController {
   async login(req: Request, res: Response) {

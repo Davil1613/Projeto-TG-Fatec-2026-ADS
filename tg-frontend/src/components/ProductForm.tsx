@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { formatCurrency } from "@/lib/utils";
 import { ImagePlus, Star, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -162,7 +163,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
     try {
       if (!formData.category_id) {
         toast({
-          title: "Categoria obrigatoria",
+          title: "Categoria obrigatória",
           description: "Selecione uma categoria para o produto.",
           variant: "destructive",
         });
@@ -176,8 +177,8 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
 
       if (salePrice < 0 || costPrice < 0 || currentStock < 0 || minStock < 0) {
         toast({
-          title: "Valores invalidos",
-          description: "Preco e estoque nao podem ser negativos.",
+          title: "Valores inválidos",
+          description: "Preço e estoque não podem ser negativos.",
           variant: "destructive",
         });
         return;
@@ -226,7 +227,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
 
     if (invalidFile) {
       toast({
-        title: "Arquivo invalido",
+        title: "Arquivo inválido",
         description: "Selecione apenas imagens validas.",
         variant: "destructive",
       });
@@ -272,7 +273,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
     } catch (error: any) {
       toast({
         title: "Erro no upload",
-        description: error.message || "Nao foi possivel enviar a imagem.",
+        description: error.message || "Não foi possível enviar a imagem.",
         variant: "destructive",
       });
     } finally {
@@ -327,7 +328,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Descricao</Label>
+        <Label htmlFor="description">Descrição</Label>
         <Textarea
           id="description"
           rows={3}
@@ -339,7 +340,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="sale_price">Preco de Venda (R$) *</Label>
+          <Label htmlFor="sale_price">Preço de Venda (R$) *</Label>
           <Input
             id="sale_price"
             type="number"
@@ -353,7 +354,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="cost_price">Preco de Custo (R$) *</Label>
+          <Label htmlFor="cost_price">Preço de Custo (R$) *</Label>
           <Input
             id="cost_price"
             type="number"
@@ -371,7 +372,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         <p className="text-muted-foreground">
           Margem estimada por unidade:{" "}
           <span className="font-semibold text-foreground">
-            R$ {marginPreview.margin.toFixed(2)} ({marginPreview.marginPercent.toFixed(1)}%)
+            {formatCurrency(marginPreview.margin)} ({marginPreview.marginPercent.toFixed(1).replace(".", ",")}%)
           </span>
         </p>
       </div>
@@ -391,7 +392,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="min_stock">Estoque Minimo *</Label>
+          <Label htmlFor="min_stock">Estoque Mínimo *</Label>
           <Input
             id="min_stock"
             type="number"

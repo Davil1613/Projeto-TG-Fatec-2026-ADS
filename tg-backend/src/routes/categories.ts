@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import CategoryController from '../controllers/categoryController';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticateToken, requireAdmin } from '../middlewares/auth';
+import { requireActiveSubscription } from '../middlewares/subscription';
 
 const categoryRouter = Router();
-categoryRouter.use(authenticateToken);
+categoryRouter.use(authenticateToken, requireActiveSubscription);
 
 /**
  * @swagger
@@ -81,7 +82,7 @@ categoryRouter
    *       '201':
    *         description: Grupo de categorias criado com sucesso
    */
-  .post('/', (req, res, next) =>
+  .post('/', requireAdmin, (req, res, next) =>
     CategoryController.create(req, res, next))
 
   /**
@@ -147,7 +148,7 @@ categoryRouter
    *       '404':
    *         description: Grupo de categorias não encontrado
    */
-  .put('/:id', (req, res, next) =>
+  .put('/:id', requireAdmin, (req, res, next) =>
     CategoryController.updateById(req, res, next))
 
   /**
@@ -170,7 +171,7 @@ categoryRouter
    *       '404':
    *         description: Grupo de categorias não encontrado
    */
-  .delete('/:id', (req, res, next) =>
+  .delete('/:id', requireAdmin, (req, res, next) =>
     CategoryController.deleteById(req, res, next))
 
 export default categoryRouter;

@@ -5,6 +5,8 @@ import UserModel from '../models/User';
 import TenantModel from '../models/Tenant';
 import sequelize from '../models';
 import { validatePasswordStrength } from '../utils/passwordValidation';
+import BaseError from '../errors/BaseError';
+import billingService from './billingService';
 
 class UserService {
   async createAdminWithTenant(data: {
@@ -15,7 +17,7 @@ class UserService {
   }): Promise<UserModel> {
     const passwordValidation = validatePasswordStrength(data.password);
     if (!passwordValidation.valid) {
-      throw new Error(passwordValidation.message);
+      throw new BaseError(passwordValidation.message || 'Senha inválida.', 400);
     }
 
     const transaction = await sequelize.transaction();
@@ -35,6 +37,9 @@ class UserService {
         ownerUserId: user.id,
         name: data.name,
         status: 'active',
+        subscriptionStatus: 'trial',
+        trialEndsAt: billingService.trialEndDate(),
+        mpPreapprovalId: null,
       }, { transaction });
 
       await user.update({ tenantId: tenant.id }, { transaction });
@@ -45,6 +50,25 @@ class UserService {
       await transaction.rollback();
       throw error;
     }
+  }
+
+  async createMember(tenantId: number, data: { name: string; email: string; password: string }): Promise<UserModel> {
+    if (!data.name || !data.email) {
+      throw new BaseError('Nome e e-mail são obrigatórios.', 400);
+    }
+
+    const passwordValidation = validatePasswordStrength(data.password);
+    if (!passwordValidation.valid) {
+      throw new BaseError(passwordValidation.message || 'Senha inválida.', 400);
+    }
+
+    return await UserModel.create({
+      tenantId,
+      name: data.name,
+      email: data.email,
+      password: await bcrypt.hash(data.password, 10),
+      role: 'user',
+    });
   }
 
   async getAll(tenantId: number): Promise<UserModel[]> {
@@ -62,16 +86,38 @@ class UserService {
     return await UserModel.findOne({ where: { email } });
   }
 
-  async updateById(id: number, tenantId: number, data: Partial<UserModel>): Promise<UserModel | null> {
+  async updateById(
+    id: number,
+    tenantId: number,
+    data: { name?: string; email?: string; password?: string },
+  ): Promise<UserModel | null> {
     const user = await UserModel.findOne({ where: { id, tenantId } });
     if (!user) return null;
-    await user.update(data);
+
+    const changes: { name?: string; email?: string; password?: string } = {};
+    if (data.name) changes.name = data.name;
+    if (data.email) changes.email = data.email;
+    if (data.password) {
+      const passwordValidation = validatePasswordStrength(data.password);
+      if (!passwordValidation.valid) {
+        throw new BaseError(passwordValidation.message || 'Senha inválida.', 400);
+      }
+      changes.password = await bcrypt.hash(data.password, 10);
+    }
+
+    await user.update(changes);
     return user;
   }
 
   async deleteById(id: number, tenantId: number): Promise<boolean> {
     const user = await UserModel.findOne({ where: { id, tenantId } });
     if (!user) return false;
+
+    const tenant = await TenantModel.findByPk(tenantId);
+    if (tenant?.ownerUserId === user.id) {
+      throw new BaseError('O administrador responsável pela assinatura não pode ser excluído.', 409);
+    }
+
     await user.destroy();
     return true;
   }
@@ -102,7 +148,7 @@ class UserService {
   async resetPasswordWithCode(email: string, resetCode: string, newPassword: string): Promise<boolean> {
     const passwordValidation = validatePasswordStrength(newPassword);
     if (!passwordValidation.valid) {
-      throw new Error(passwordValidation.message);
+      throw new BaseError(passwordValidation.message || 'Senha inválida.', 400);
     }
 
     const tokenHash = createHash('sha256').update(resetCode).digest('hex');

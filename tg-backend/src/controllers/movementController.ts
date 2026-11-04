@@ -41,28 +41,6 @@ class MovementController {
       return next(err);
     }
   }
-
-  async updateById(req: Request, res: Response, next: NextFunction) {
-    try {
-      const tenantId = req.user!.tenantId;
-      const movement = await movementService.updateById(Number(req.params.id), tenantId, req.body);
-      if (!movement) return res.status(404).json({ error: 'Movimentacao nao encontrada' });
-      return res.json(movement);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async deleteById(req: Request, res: Response, next: NextFunction) {
-    try {
-      const tenantId = req.user!.tenantId;
-      const success = await movementService.deleteById(Number(req.params.id), tenantId);
-      if (!success) return res.status(404).json({ error: 'Movimentacao nao encontrada' });
-      return res.status(204).send();
-    } catch (err) {
-      return next(err);
-    }
-  }
 }
 
 export default new MovementController();

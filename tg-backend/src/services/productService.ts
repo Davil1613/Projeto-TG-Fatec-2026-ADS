@@ -1,6 +1,7 @@
 import CategoryModel from '../models/Category';
 import ProductModel from '../models/Product';
 import ProductImageModel from '../models/ProductImage';
+import NotFoundError from '../errors/NotFoundError';
 
 function normalizeImageUrls(data: any) {
   const urls = Array.isArray(data.imageUrls)
@@ -64,7 +65,7 @@ class ProductService {
     const category = await CategoryModel.findOne({
       where: { id: data.categoryId, tenantId },
     });
-    if (!category) throw new Error('Category not found');
+    if (!category) throw new NotFoundError('Categoria não encontrada.');
 
     const imageUrls = normalizeImageUrls(data);
     const product = await ProductModel.create({
@@ -85,7 +86,7 @@ class ProductService {
       const category = await CategoryModel.findOne({
         where: { id: data.categoryId, tenantId },
       });
-      if (!category) throw new Error('Category not found');
+      if (!category) throw new NotFoundError('Categoria não encontrada.');
     }
 
     const imageUrls = normalizeImageUrls(data);

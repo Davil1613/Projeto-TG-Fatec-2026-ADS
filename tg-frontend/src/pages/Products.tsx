@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { formatCurrency } from "@/lib/utils";
 import { getProducts, deleteProduct, createProduct } from "@/integrations/productsApi";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -150,7 +151,7 @@ export default function Products() {
         product.minStock,
         replenishment,
         Number(product.salePrice).toFixed(2),
-        Number(product.costPrice || 0).toFixed(2),
+        ...(isAdmin ? [Number(product.costPrice || 0).toFixed(2)] : []),
         getProductImageUrls(product).length,
       ];
     });
@@ -162,10 +163,10 @@ export default function Products() {
         "Produto",
         "Categoria",
         "Estoque Atual",
-        "Estoque Minimo",
-        "Reposicao Sugerida",
-        "Preco Venda",
-        "Preco Custo",
+        "Estoque Mínimo",
+        "Reposição Sugerida",
+        "Preço Venda",
+        ...(isAdmin ? ["Preço Custo"] : []),
         "Qtd. Imagens",
       ],
       rows,
@@ -226,7 +227,7 @@ export default function Products() {
       }
 
       toast({
-        title: "Importacao concluida",
+        title: "Importação concluída",
         description: `${importedCount} produto(s) importado(s) com sucesso.`,
       });
       loadProducts();
@@ -255,7 +256,7 @@ export default function Products() {
         "minStock",
         "imageUrl",
       ],
-      rows: [["Produto Exemplo", "SKU-001", 1, "Descricao opcional", 49.9, 25.5, 10, 3, ""]],
+      rows: [["Produto Exemplo", "SKU-001", 1, "Descrição opcional", 49.9, 25.5, 10, 3, ""]],
     });
   };
 
@@ -276,11 +277,12 @@ export default function Products() {
       <div className="space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">Produtos</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">Produtos</h1>
             <p className="text-muted-foreground mt-2">
-              Gerencie seu catalogo de produtos
+              Gerencie seu catálogo de produtos
             </p>
           </div>
+          {isAdmin && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button size="lg" onClick={() => setEditingProduct(null)}>
@@ -300,6 +302,7 @@ export default function Products() {
               />
             </DialogContent>
           </Dialog>
+          )}
         </div>
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -314,6 +317,8 @@ export default function Products() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
+            {isAdmin && (
+            <>
             <Button type="button" variant="outline" onClick={handleDownloadImportTemplate}>
               <Download className="mr-2 h-4 w-4" />
               Modelo CSV
@@ -331,6 +336,8 @@ export default function Products() {
                 />
               </label>
             </Button>
+            </>
+            )}
 
             <Select value={stockFilter} onValueChange={setStockFilter}>
               <SelectTrigger className="sm:w-48">
@@ -340,7 +347,7 @@ export default function Products() {
                 <SelectItem value="all">Todos os status</SelectItem>
                 <SelectItem value="normal">Normal</SelectItem>
                 <SelectItem value="low">Baixo</SelectItem>
-                <SelectItem value="critical">Critico</SelectItem>
+                <SelectItem value="critical">Crítico</SelectItem>
                 <SelectItem value="empty">Esgotado</SelectItem>
               </SelectContent>
             </Select>
@@ -366,10 +373,10 @@ export default function Products() {
                 <TableHead>Nome</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead className="text-right">Estoque</TableHead>
-                <TableHead className="text-right">Reposicao</TableHead>
-                <TableHead className="text-right">Preco Venda</TableHead>
+                <TableHead className="text-right">Reposição</TableHead>
+                <TableHead className="text-right">Preço Venda</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Acoes</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -416,7 +423,7 @@ export default function Products() {
                       {replenishment > 0 ? `${replenishment} un.` : "-"}
                     </TableCell>
                     <TableCell className="text-right">
-                      R$ {Number(product.salePrice).toFixed(2)}
+                      {formatCurrency(Number(product.salePrice))}
                     </TableCell>
                     <TableCell>
                       <StockIndicator
@@ -434,23 +441,27 @@ export default function Products() {
                         >
                           <QrCode className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setEditingProduct(product);
-                            setIsDialogOpen(true);
-                          }}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {isAdmin && (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setEditingProduct(product);
+                                setIsDialogOpen(true);
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(product.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

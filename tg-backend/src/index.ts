@@ -6,6 +6,7 @@ import routes from './routes';
 import swagger from './swagger';
 import cors from 'cors';
 import path from 'path';
+import { errorHandler } from './middlewares/errorHandler';
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,7 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 
 swagger(app);
 routes(app);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 

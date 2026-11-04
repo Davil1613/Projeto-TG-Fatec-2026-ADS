@@ -10,7 +10,6 @@ const CONFIG = {
   productName: "STOCKPRO",
   price: "R$50/mês",
   trialDays: "7 dias",
-  checkoutUrl: "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=3e61f1af5985402f89e1ddb1a13c5da9",
   hero: {
     title: "Gerencie Seu Estoque de Forma Automática e Profissional",
     subtitle: "O STOCKPRO te dá controle completo do seu estoque, produtos, vendas e relatórios — tudo sem complicação.",

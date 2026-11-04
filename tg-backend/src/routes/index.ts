@@ -7,6 +7,7 @@ import usersRoutes from './users';
 import authRoutes from './auth';
 import uploadsRoutes from './uploads';
 import auditLogsRoutes from './auditLogs';
+import billingRoutes from './billing';
 
 
 const routes = (app: Express) => {
@@ -17,6 +18,7 @@ const routes = (app: Express) => {
     app.use('/api/v1/auth', authRoutes);
     app.use('/api/v1/uploads', uploadsRoutes);
     app.use('/api/v1/audit-logs', auditLogsRoutes);
+    app.use('/api/v1/billing', billingRoutes);
 
   app.get('/', (req, res) => {
     res.send('TG Backend API running');

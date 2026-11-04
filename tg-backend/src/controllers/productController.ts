@@ -1,6 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import productService from '../services/productService';
 import auditLogService from '../services/auditLogService';
+import ProductModel from '../models/Product';
+
+function forRole(product: ProductModel, role: 'admin' | 'user') {
+  const data = product.toJSON() as Record<string, unknown>;
+  if (role !== 'admin') delete data.costPrice;
+  return data;
+}
 
 class ProductController {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -25,7 +32,7 @@ class ProductController {
     try {
       const tenantId = req.user!.tenantId;
       const products = await productService.getAll(tenantId);
-      res.json(products);
+      res.json(products.map((product) => forRole(product, req.user!.role)));
     } catch (err) {
       next(err);
     }
@@ -36,7 +43,7 @@ class ProductController {
       const tenantId = req.user!.tenantId;
       const product = await productService.getById(Number(req.params.id), tenantId);
       if (!product) return res.status(404).json({ error: 'Produto nao encontrado' });
-      return res.json(product);
+      return res.json(forRole(product, req.user!.role));
     } catch (err) {
       return next(err);
     }

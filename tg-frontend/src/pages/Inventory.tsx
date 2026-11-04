@@ -96,20 +96,20 @@ export default function Inventory() {
           productId: adjustment.product.id,
           movementType: adjustment.movementType,
           quantity: adjustment.quantity,
-          notes: `Ajuste de inventario: sistema ${adjustment.product.currentStock}, contagem ${adjustment.countedNumber}`,
+          notes: `Ajuste de inventário: sistema ${adjustment.product.currentStock}, contagem ${adjustment.countedNumber}`,
         });
       }
 
       toast({
-        title: "Inventario aplicado",
-        description: `${adjustments.length} ajuste(s) registrado(s) nas movimentacoes.`,
+        title: "Inventário aplicado",
+        description: `${adjustments.length} ajuste(s) registrado(s) nas movimentações.`,
       });
       setCountedStock({});
       await loadProducts();
     } catch (error: any) {
       toast({
-        title: "Erro ao aplicar inventario",
-        description: error.message || "Nao foi possivel registrar os ajustes.",
+        title: "Erro ao aplicar inventário",
+        description: error.message || "Não foi possível registrar os ajustes.",
         variant: "destructive",
       });
     } finally {
@@ -122,7 +122,7 @@ export default function Inventory() {
       <div className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">Inventario</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">Inventário</h1>
             <p className="text-muted-foreground mt-2">
               Compare a contagem fisica com o estoque do sistema
             </p>
@@ -145,7 +145,7 @@ export default function Inventory() {
             <p className="text-2xl font-bold">{Object.values(countedStock).filter(Boolean).length}</p>
           </div>
           <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Divergencias</p>
+            <p className="text-sm text-muted-foreground">Divergências</p>
             <p className="text-2xl font-bold">{adjustments.length}</p>
           </div>
           <div className="rounded-lg border bg-card p-4">

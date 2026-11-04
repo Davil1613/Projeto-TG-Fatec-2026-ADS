@@ -16,6 +16,9 @@ import Stock from "./pages/Stock";
 import Inventory from "./pages/Inventory";
 import Reports from "./pages/Reports";
 import Audit from "./pages/Audit";
+import Team from "./pages/Team";
+import Subscription from "./pages/Subscription";
+import AdminRoute from "./components/AdminRoute";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -108,8 +111,32 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <SubscriptionProtectedRoute>
-                    <Audit />
+                    <AdminRoute>
+                      <Audit />
+                    </AdminRoute>
                   </SubscriptionProtectedRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/equipe"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionProtectedRoute>
+                    <AdminRoute>
+                      <Team />
+                    </AdminRoute>
+                  </SubscriptionProtectedRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assinatura"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <Subscription />
+                  </AdminRoute>
                 </ProtectedRoute>
               }
             />

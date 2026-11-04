@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { formatCurrency } from "@/lib/utils";
 import Layout from "@/components/Layout";
 import {
   Select,
@@ -93,16 +94,16 @@ export default function Reports() {
 
   const handleExportExcel = () => {
     const periodLabelMap: Record<string, string> = {
-      "7": "Ultimos 7 dias",
-      "15": "Ultimos 15 dias",
-      "30": "Ultimos 30 dias",
-      "90": "Ultimos 90 dias",
+      "7": "Últimos 7 dias",
+      "15": "Últimos 15 dias",
+      "30": "Últimos 30 dias",
+      "90": "Últimos 90 dias",
     };
 
     const typeLabelMap: Record<string, string> = {
       all: "Todos",
       entrada: "Entradas",
-      saida: "Saidas",
+      saida: "Saídas",
     };
 
     const rows = filteredMovements.map((movement) => {
@@ -112,7 +113,7 @@ export default function Reports() {
         format(new Date(movement.createdAt), "dd/MM/yyyy HH:mm", { locale: ptBR }),
         movement.product?.name || "-",
         movement.product?.sku || "-",
-        movement.movementType === "entrada" ? "Entrada" : "Saida",
+        movement.movementType === "entrada" ? "Entrada" : "Saída",
         movement.quantity,
         unit.toFixed(2),
         total.toFixed(2),
@@ -130,10 +131,10 @@ export default function Reports() {
         "SKU",
         "Tipo",
         "Quantidade",
-        "Valor Unitario",
+        "Valor Unitário",
         "Valor Total",
-        "Observacoes",
-        "Periodo",
+        "Observações",
+        "Período",
         "Filtro de Tipo",
       ],
       rows,
@@ -144,9 +145,9 @@ export default function Reports() {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-bold text-foreground">Relatorios</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Relatórios</h1>
           <p className="text-muted-foreground mt-2">
-            Analise detalhada das movimentacoes de estoque
+            Análise detalhada das movimentações de estoque
           </p>
         </div>
 
@@ -158,18 +159,18 @@ export default function Reports() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{entriesQuantity} unidades</div>
-              <p className="text-xs text-muted-foreground">Valor: R$ {entriesValue.toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">Valor: {formatCurrency(entriesValue)}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Saidas</CardTitle>
+              <CardTitle className="text-sm font-medium">Total de Saídas</CardTitle>
               <TrendingDown className="h-4 w-4 text-destructive" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{exitsQuantity} unidades</div>
-              <p className="text-xs text-muted-foreground">Valor: R$ {exitsValue.toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">Valor: {formatCurrency(exitsValue)}</p>
             </CardContent>
           </Card>
         </div>
@@ -178,13 +179,13 @@ export default function Reports() {
           <div className="flex gap-4">
             <Select value={periodFilter} onValueChange={setPeriodFilter}>
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="Periodo" />
+                <SelectValue placeholder="Período" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="7">Ultimos 7 dias</SelectItem>
-                <SelectItem value="15">Ultimos 15 dias</SelectItem>
-                <SelectItem value="30">Ultimos 30 dias</SelectItem>
-                <SelectItem value="90">Ultimos 90 dias</SelectItem>
+                <SelectItem value="7">Últimos 7 dias</SelectItem>
+                <SelectItem value="15">Últimos 15 dias</SelectItem>
+                <SelectItem value="30">Últimos 30 dias</SelectItem>
+                <SelectItem value="90">Últimos 90 dias</SelectItem>
               </SelectContent>
             </Select>
 
@@ -195,7 +196,7 @@ export default function Reports() {
               <SelectContent>
                 <SelectItem value="all">Todos os tipos</SelectItem>
                 <SelectItem value="entrada">Apenas Entradas</SelectItem>
-                <SelectItem value="saida">Apenas Saidas</SelectItem>
+                <SelectItem value="saida">Apenas Saídas</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -222,7 +223,7 @@ export default function Reports() {
                 <TableHead className="text-right">Quantidade</TableHead>
                 <TableHead className="text-right">Valor Unit.</TableHead>
                 <TableHead className="text-right">Valor Total</TableHead>
-                <TableHead>Observacoes</TableHead>
+                <TableHead>Observações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -242,7 +243,7 @@ export default function Reports() {
                           : ""
                       }
                     >
-                      {movement.movementType === "entrada" ? "Entrada" : "Saida"}
+                      {movement.movementType === "entrada" ? "Entrada" : "Saída"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right font-semibold">
@@ -250,10 +251,10 @@ export default function Reports() {
                     {movement.quantity}
                   </TableCell>
                   <TableCell className="text-right">
-                    R$ {Number(movement.product?.salePrice || 0).toFixed(2)}
+                    {formatCurrency(Number(movement.product?.salePrice || 0))}
                   </TableCell>
                   <TableCell className="text-right font-semibold">
-                    R$ {(Number(movement.quantity) * Number(movement.product?.salePrice || 0)).toFixed(2)}
+                    {formatCurrency(Number(movement.quantity) * Number(movement.product?.salePrice || 0))}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {movement.notes || "-"}

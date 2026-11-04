@@ -7,6 +7,8 @@ import {
 } from 'sequelize';
 import sequelize from '.';
 
+export type SubscriptionStatus = 'trial' | 'pending' | 'active' | 'past_due' | 'canceled';
+
 class TenantModel extends Model<
   InferAttributes<TenantModel>,
   InferCreationAttributes<TenantModel>
@@ -15,6 +17,9 @@ class TenantModel extends Model<
   declare ownerUserId: number;
   declare name: string;
   declare status: 'active' | 'inactive';
+  declare subscriptionStatus: CreationOptional<SubscriptionStatus>;
+  declare trialEndsAt: Date | null;
+  declare mpPreapprovalId: string | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare deletedAt: CreationOptional<Date>;
@@ -44,6 +49,22 @@ TenantModel.init({
     allowNull: false,
     type: DataTypes.ENUM('active', 'inactive'),
     defaultValue: 'active',
+  },
+  subscriptionStatus: {
+    field: 'subscription_status',
+    allowNull: false,
+    type: DataTypes.ENUM('trial', 'pending', 'active', 'past_due', 'canceled'),
+    defaultValue: 'trial',
+  },
+  trialEndsAt: {
+    field: 'trial_ends_at',
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
+  mpPreapprovalId: {
+    field: 'mp_preapproval_id',
+    allowNull: true,
+    type: DataTypes.STRING(64),
   },
   createdAt: {
     field: 'created_at',
