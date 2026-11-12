@@ -73,7 +73,7 @@ class CategoryController {
         action: 'delete',
         entity: 'category',
         entityId: categoryId,
-        description: `Categoria excluida: ${categoryId}`,
+        description: `Categoria excluída: ${categoryId}`,
       });
       return res.status(204).send();
     } catch (err) {

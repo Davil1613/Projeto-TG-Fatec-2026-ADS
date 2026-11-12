@@ -1,4 +1,5 @@
 import AuditLogModel from '../models/AuditLog';
+import UserModel from '../models/User';
 
 class AuditLogService {
   async create(data: {
@@ -22,6 +23,7 @@ class AuditLogService {
   async getAll(tenantId: number) {
     return await AuditLogModel.findAll({
       where: { tenantId },
+      include: [{ model: UserModel, as: 'user', attributes: ['id', 'name'] }],
       order: [['createdAt', 'DESC']],
       limit: 200,
     });

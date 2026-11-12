@@ -80,7 +80,7 @@ class ProductController {
         action: 'delete',
         entity: 'product',
         entityId: productId,
-        description: `Produto excluido: ${productId}`,
+        description: `Produto excluído: ${productId}`,
       });
       return res.status(204).send();
     } catch (err) {

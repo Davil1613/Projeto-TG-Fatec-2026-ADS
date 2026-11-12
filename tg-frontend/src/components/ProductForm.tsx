@@ -312,7 +312,9 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         <Label>Categoria *</Label>
         <Select
           value={formData.category_id}
-          onValueChange={(value) => setFormData({ ...formData, category_id: value })}
+          onValueChange={(value) => {
+            if (value) setFormData((current) => ({ ...current, category_id: value }));
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Selecione uma categoria" />

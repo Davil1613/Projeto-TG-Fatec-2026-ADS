@@ -23,6 +23,7 @@ interface AuditLog {
   entityId: number | null;
   description: string | null;
   createdAt: string;
+  user?: { id: number; name: string } | null;
 }
 
 const actionLabel: Record<string, string> = {
@@ -79,7 +80,7 @@ export default function Audit() {
               <TableRow>
                 <TableHead>Data/Hora</TableHead>
                 <TableHead>Ação</TableHead>
-                <TableHead>Modulo</TableHead>
+                <TableHead>Módulo</TableHead>
                 <TableHead>ID</TableHead>
                 <TableHead>Descrição</TableHead>
                 <TableHead>Usuário</TableHead>
@@ -101,7 +102,7 @@ export default function Audit() {
                   <TableCell className="text-sm text-muted-foreground">
                     {log.description || "-"}
                   </TableCell>
-                  <TableCell className="font-mono text-sm">{log.userId || "-"}</TableCell>
+                  <TableCell className="text-sm">{log.user?.name || "-"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
